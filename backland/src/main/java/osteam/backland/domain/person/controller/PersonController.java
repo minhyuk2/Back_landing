@@ -1,11 +1,11 @@
 package osteam.backland.domain.person.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import osteam.backland.domain.person.controller.request.PersonCreateRequest;
 import osteam.backland.domain.person.controller.response.PersonResponse;
 import osteam.backland.domain.person.service.PersonCreateService;
@@ -13,6 +13,7 @@ import osteam.backland.domain.person.service.PersonSearchService;
 import osteam.backland.domain.person.service.PersonUpdateService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * PersonController
@@ -25,11 +26,16 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/person")
+@RequiredArgsConstructor
 public class PersonController {
 
-    private PersonCreateService personCreateService;
-    private PersonUpdateService personUpdateService;
-    private PersonSearchService personSearchService;
+
+    private final PersonCreateService personCreateService;
+
+    private final PersonUpdateService personUpdateService;
+
+    private final PersonSearchService personSearchService;
+
 
     /**
      * 등록 기능
@@ -39,7 +45,12 @@ public class PersonController {
      * @return 성공 시 이름 반환
      */
     @PostMapping
-    public String person(PersonCreateRequest personCreateRequest) {
+    public String person(@RequestBody PersonCreateRequest personCreateRequest) {
+
+        //각각의 이름을 입력받아서 넘겨주면 되는 것이다.
+        personCreateService.createAll(personCreateRequest.getName(),personCreateRequest.getPhone());
+
+        //여기 채워 넣어야 함
         return personCreateRequest.getName();
     }
 
@@ -48,7 +59,10 @@ public class PersonController {
      */
     @GetMapping
     public ResponseEntity<List<PersonResponse>> getPeople() {
-        return null;
+        List<PersonResponse> people = personSearchService.getAllPeople();
+        //성공한 경우에 ok를 반환하게 되는 것이다.
+        //응답데이터로 people을 포함한 채로 200을 보내게 되는 것이다.
+        return ResponseEntity.ok(people);
     }
 
     /**
@@ -57,8 +71,16 @@ public class PersonController {
      * @param name
      */
     @GetMapping("/name")
-    public ResponseEntity<List<PersonResponse>> getPeopleByName(String name) {
-        return null;
+    public ResponseEntity<List<PersonResponse>> getPeopleByName(@RequestParam String name) {
+        //RequestParam을 사용해야지 params로 넣어서 확인할 수 있게 되는 것이다.
+
+        List<PersonResponse> people = personSearchService.findPeopleByName(name);
+
+        if (people.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 데이터가 없으면 404 반환
+        }
+
+        return new ResponseEntity<>(people, HttpStatus.OK); // 결과가 있으면 200 반환
     }
 
     /**
@@ -67,7 +89,14 @@ public class PersonController {
      * @param phone
      */
     @GetMapping("/phone")
-    public ResponseEntity<List<PersonResponse>> getPeopleByPhone(String phone) {
-        return null;
+    public ResponseEntity<List<PersonResponse>> getPeopleByPhone(@RequestParam String phone) {
+        //번호로 찾을 때는 하나의 One이나 only에서만 찾는 형식으로 구현을 해봄
+        //한 번에 One only many 다 저장되기 때문에 하나에서만 찾아도 됨
+        List<PersonResponse> people = personSearchService.findPeopleByPhone(phone);
+        if (people.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(people,HttpStatus.OK);
     }
 }
