@@ -58,32 +58,48 @@ public class PersonCreateService {
         return "Success";
     }
 
+
+
     /**
      * Phone과 OneToOne 관계인 person 생성
      */
     public PersonDTO oneToOne(String name, String phone) {
         PersonOneToOne person = new PersonOneToOne();
         person.setName(name);
+
+
         //여기에는 PhoneOneToOne객체가 없는 상태로 전달이될텐데 서로 갖고 있는 채로 전달해주기 위해서는 어떻게 해야하는 것이지?
         //이렇게 세팅하게 되면 서로 객체를 공우하는 형식이 될 것 같은데
         //이렇게 하면 person객체에 이름만 저장된 채로 전달이 되어서 저장되는게 아닌가? 전화번호 같은 부분들은 저장되지 않아도 상관없나?
         //해결완료
 
+
         //기존에 작성했던 코드입니다.
 //        PhoneOneToOne phoneEntity = new PhoneOneToOne();
 //        phoneEntity.setPhone(phone);
 //        phoneEntity.setPerson(person);
+
+
+        //이렇게 객체를 생성해서 할당하면 안되는 형태인 것인가?
         PhoneOneToOne phoneEntity = phoneCreateService.phoneOneReturn(phone,person);
         person.setPhoneOneToOne(phoneEntity);
+
 
         personOneRepository.save(person);
         phoneOneRepository.save(phoneEntity);
 
+
         PersonDTO personDTO = new PersonDTO();
         personDTO.setName(person.getName());
+
+
+
         personDTO.setPhone(phoneEntity.getPhone());
 
+
+
         return personDTO;
+
     }
 
     /**
@@ -96,7 +112,7 @@ public class PersonCreateService {
         //여기서 입력을 받을 때 phone 하나만 입력받게 되는건데 이 부분을 좀 수정하는게 필요하지 않을까
 
 
-        PhoneOneToMany phoneEntity = phoneCreateService.phoneManyreturn(phone,person);
+        PhoneOneToMany phoneEntity = phoneCreateService.phoneManyReturn(phone,person);
 //        PhoneOneToMany phoneEntity = new PhoneOneToMany();
 //        phoneEntity.setPhone(phone);
 //        phoneEntity.setPersonOneToMany(person);

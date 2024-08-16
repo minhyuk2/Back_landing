@@ -12,8 +12,12 @@ import osteam.backland.global.entity.PrimaryKeyEntity;
 @Setter
 @NoArgsConstructor
 public class PhoneOneToMany extends PrimaryKeyEntity {
-
+    @Setter
     private String phone;
+
+    public PhoneOneToMany(String phone) {
+        this.phone = phone;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(

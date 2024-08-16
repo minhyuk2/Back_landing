@@ -11,15 +11,18 @@ public class PhoneCreateService {
 
     //필요한 phoneCreateservice메소드 생성
 
+
     public PhoneOneToOne phoneOneReturn (String number, PersonOneToOne person) {
 
         PhoneOneToOne phone = new PhoneOneToOne();
         phone.setPhone(number);
         phone.setPerson(person);
+
         return phone;
+
     }
 
-    public PhoneOneToMany phoneManyreturn (String number, PersonOneToMany person) {
+    public PhoneOneToMany phoneManyReturn (String number, PersonOneToMany person) {
 
         PhoneOneToMany phone = new PhoneOneToMany();
         phone.setPhone(number);
