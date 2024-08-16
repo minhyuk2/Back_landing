@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import osteam.backland.domain.person.entity.PersonOneToMany;
 import osteam.backland.domain.person.entity.PersonOneToOne;
 import osteam.backland.domain.person.entity.PersonOnly;
@@ -25,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class PersonServiceTest {
 
     @Mock
@@ -55,25 +59,35 @@ public class PersonServiceTest {
 
     @Test
     void testOneToOne() {
+
         // given
+
         String name = "John Doe";
         String phone = "123-456-7890";
         PersonOneToOne person = new PersonOneToOne();
-        PhoneOneToOne phoneEntity = new PhoneOneToOne();
-        phoneEntity.setPhone(phone);
+        person.setName(name);
+        PhoneOneToOne phoneEntitys = new PhoneOneToOne();
+        phoneEntitys.setPhone(phone);
+        phoneEntitys.setPerson(person);
 
-        when(phoneCreateService.phoneOneReturn(phone, person)).thenReturn(phoneEntity);
+
+        when(phoneCreateService.phoneOneReturn(phone, person)).thenReturn(phoneEntitys);
         when(personOneRepository.save(any(PersonOneToOne.class))).thenReturn(person);
-        when(phoneOneRepository.save(any(PhoneOneToOne.class))).thenReturn(phoneEntity);
+        when(phoneOneRepository.save(any(PhoneOneToOne.class))).thenReturn(phoneEntitys);
+
 
         // when
-        PersonDTO result = personCreateService.oneToOne(name, phone);
+
+        PersonDTO result = personCreateService.oneToOne(name,phone);
 
         // then
+
         assertEquals(name, result.getName());
         assertEquals(phone, result.getPhone());
         verify(personOneRepository, times(1)).save(any(PersonOneToOne.class));
         verify(phoneOneRepository, times(1)).save(any(PhoneOneToOne.class));
+
+
     }
 
     @Test
@@ -85,7 +99,7 @@ public class PersonServiceTest {
         PhoneOneToMany phoneEntity = new PhoneOneToMany();
         phoneEntity.setPhone(phone);
 
-        when(phoneCreateService.phoneManyreturn(phone, person)).thenReturn(phoneEntity);
+        when(phoneCreateService.phoneManyReturn(phone, person)).thenReturn(phoneEntity);
         when(personManyRepository.save(any(PersonOneToMany.class))).thenReturn(person);
         when(phoneManyRepository.save(any(PhoneOneToMany.class))).thenReturn(phoneEntity);
 
