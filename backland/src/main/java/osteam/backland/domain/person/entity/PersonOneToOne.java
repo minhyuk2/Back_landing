@@ -19,6 +19,7 @@ public class PersonOneToOne extends PrimaryKeyEntity {
 
     private String name;
 
+
     @OneToOne(
             mappedBy = "person",
             orphanRemoval = true,

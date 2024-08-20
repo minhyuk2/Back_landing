@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import osteam.backland.domain.person.entity.PersonOneToMany;
 import osteam.backland.domain.person.entity.PersonOneToOne;
 import osteam.backland.domain.person.entity.PersonOnly;
@@ -58,6 +59,7 @@ public class PersonServiceTest {
     }
 
     @Test
+    @Transactional
     void testOneToOne() {
 
         // given
@@ -71,10 +73,9 @@ public class PersonServiceTest {
         phoneEntitys.setPerson(person);
 
 
-        when(phoneCreateService.phoneOneReturn(phone, person)).thenReturn(phoneEntitys);
+//        when(phoneCreateService.phoneOneReturn(phone, person)).thenReturn(phoneEntitys);
         when(personOneRepository.save(any(PersonOneToOne.class))).thenReturn(person);
         when(phoneOneRepository.save(any(PhoneOneToOne.class))).thenReturn(phoneEntitys);
-
 
         // when
 
