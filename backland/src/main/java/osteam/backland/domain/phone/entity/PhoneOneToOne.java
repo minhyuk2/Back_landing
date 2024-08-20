@@ -15,14 +15,18 @@ import osteam.backland.global.entity.PrimaryKeyEntity;
 @Setter
 @NoArgsConstructor
 public class PhoneOneToOne extends PrimaryKeyEntity {
-    @Setter
+
     private String phone;
 
-    public PhoneOneToOne(String phone) {
-        this.phone = phone;
-    }
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
     private PersonOneToOne person;
+
+    public PhoneOneToOne(String phone,PersonOneToOne person) {
+        this.phone = phone;
+        this.person = person;
+    }
+
 }

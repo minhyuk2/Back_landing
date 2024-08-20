@@ -47,6 +47,8 @@ public class PersonController {
     @PostMapping
     public String person(@RequestBody PersonCreateRequest personCreateRequest) {
 
+        //이미 있으면 수정하고 그냥 만드는 로직도 넣어주면 좋은 것이다.
+
         //각각의 이름을 입력받아서 넘겨주면 되는 것이다.
         personCreateService.createAll(personCreateRequest.getName(),personCreateRequest.getPhone());
 
